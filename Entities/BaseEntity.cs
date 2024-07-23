@@ -13,7 +13,7 @@ namespace DevFreela.API.Entities
             IsDeleted = false;
         }
 
-        public int id { get; private set; }
+        public int  Id { get; private set; }
         public DateTime CreatAt { get; private set; }
         public bool IsDeleted { get; private set; }
 
