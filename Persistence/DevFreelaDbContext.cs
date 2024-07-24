@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DevFreela.API.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace DevFreela.API.Persistence
+{
+    public class DevFreelaDbContext : DbContext
+    {
+        public DevFreelaDbContext(DbContextOptions<DevFreelaDbContext> options)
+            : base(options)
+        {
+
+        }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<User> Users { get; set; }
+    
+    }
+}
