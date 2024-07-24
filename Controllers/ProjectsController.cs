@@ -18,25 +18,23 @@ namespace DevFreela.API.Controllers
         private readonly FreeLanceTotalCostConfig _config;
         private readonly IConfigService _configService;
 
-        public ProjectsController(IOptions<FreeLanceTotalCostConfig> options,
-                                    IConfigService configService)
+        public ProjectsController()
         {
-            _config = options.Value;
-            _configService = configService;
+            
         }
 
         // get  api/projects/search=crm
         [HttpGet]
         public IActionResult Get(string search = "")
         {
-            return Ok(_configService.GetValue());
+            return Ok();
         }
 
         // GET api/projects/1234
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            throw new Exception();
+           
             return Ok();
         }
 
