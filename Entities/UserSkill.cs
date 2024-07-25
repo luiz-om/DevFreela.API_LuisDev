@@ -1,6 +1,6 @@
 namespace DevFreela.API.Entities;
 
-public class UserSkill
+public class UserSkill: BaseEntity
 {
     public UserSkill(int iduser, int idskill)
     : base()
