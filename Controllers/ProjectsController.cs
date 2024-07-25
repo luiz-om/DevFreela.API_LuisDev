@@ -4,8 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using DevFreela.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 
@@ -15,26 +17,30 @@ namespace DevFreela.API.Controllers
     [Route("api/projects")]
     public class ProjectsController : ControllerBase
     {
-        private readonly FreeLanceTotalCostConfig _config;
-        private readonly IConfigService _configService;
+        private readonly DevFreelaDbContext _context;
 
-        public ProjectsController()
+        public ProjectsController(DevFreelaDbContext context)
         {
-            
+            _context = context;
         }
 
-        // get  api/projects/search=crm
+        // get api/projects/search=crm
         [HttpGet]
         public IActionResult Get(string search = "")
         {
-            return Ok();
+            var projects = _context.Projects
+                .Include(p => p.Client)
+                .Include(p => p.Freelancer)
+                .Where(p => !p.IsDeleted).ToList();
+
+            var model = projects.Select(ProjectItemViewModel.FromEntity).ToList();
+            return Ok(model);
         }
 
         // GET api/projects/1234
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-           
             return Ok();
         }
 
@@ -42,12 +48,11 @@ namespace DevFreela.API.Controllers
         [HttpPost]
         public IActionResult Post(CreateProjectInputModel model)
         {
-            if (model.TotalCost < _config.Minimun || model.TotalCost > _config.Maximun)
-            {
-                return BadRequest("Valor fora do contrato");
-            }
+            
+
             return CreatedAtAction(nameof(GetById), new { id = 1 }, model);
         }
+
         // PUT api/projects/1234
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateProjectInputModel model)
@@ -60,7 +65,6 @@ namespace DevFreela.API.Controllers
         public IActionResult Delete(int id)
         {
             return NoContent();
-
         }
 
         // PUT api/project/1234/start
@@ -84,6 +88,4 @@ namespace DevFreela.API.Controllers
             return Ok();
         }
     }
-
-
 }
