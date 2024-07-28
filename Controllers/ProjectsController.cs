@@ -41,22 +41,44 @@ namespace DevFreela.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok();
+            var projects = _context.Projects
+                .Include(p => p.Client)
+                .Include(p => p.Freelancer)
+                .Include(p => p.Comments)
+                .SingleOrDefault(i => i.Id == id);
+
+            var model = ProjectViewModel.FromEntity(projects);
+            return Ok(model);
         }
 
         // POST api/projects
         [HttpPost]
         public IActionResult Post(CreateProjectInputModel model)
         {
-            
+            var project = model.ToEntity();
+            _context.Projects.Add(project);
 
-            return CreatedAtAction(nameof(GetById), new { id = 1 }, model);
+            _context.SaveChanges();
+            
+            return CreatedAtAction(nameof(GetById), new {project.Id}, model);
         }
 
         // PUT api/projects/1234
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateProjectInputModel model)
         {
+            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project is null)
+            {
+                return NotFound();
+            }
+            
+            project.Update(model.Title, model.Description, model.TotalCost );
+
+            _context.Projects.Update(project);
+            _context.SaveChanges();
+            
             return NoContent();
         }
 

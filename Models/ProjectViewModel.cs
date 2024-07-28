@@ -8,8 +8,9 @@ namespace DevFreela.API.Models
 {
     public class ProjectViewModel
     {
-        public ProjectViewModel(int id, string title, string description, int idCliente, int idFreelancer, 
-        string clientName, string freelancerName, decimal totalCost, List<ProjectComment> comments)
+        public ProjectViewModel(int id, string title, string description, int idCliente,
+            int idFreelancer, string clientName, string freelancerName, decimal totalCost,
+            List<ProjectComment> comments)
         {
             this.id = id;
             Title = title;
@@ -33,9 +34,9 @@ namespace DevFreela.API.Models
         public List<string> Comments { get; private set; }
 
 
-        public static ProjectViewModel FromEntity(Project entity)
-        => new ProjectViewModel(entity.Id, entity.Title,entity.Description, entity.IdClient, entity.IdFreelancer,
-         entity.Client.FullName,entity.Freelancer.FullName, entity.TotalCost, entity.Comments );
+        public static ProjectViewModel FromEntity(Project project)
+        => new ProjectViewModel(project.Id, project.Title,project.Description, project.IdClient, project.IdFreelancer,
+         project.Client.FullName,project.Freelancer.FullName, project.TotalCost, project.Comments );
 
     }
 }
