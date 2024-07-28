@@ -71,7 +71,7 @@ namespace DevFreela.API.Controllers
 
             if (project is null)
             {
-                return NotFound();
+                return NotFound(); 
             }
             
             project.Update(model.Title, model.Description, model.TotalCost );
