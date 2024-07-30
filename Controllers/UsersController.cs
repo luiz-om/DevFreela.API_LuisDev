@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,13 @@ namespace DevFreela.API.Controllers
     [Route("api/users")]
     public class UsersController : ControllerBase
     {
+        private readonly DevFreelaDbContext _context;
+
+        public UsersController(DevFreelaDbContext context)
+        {
+            _context = context;
+        }
+        
         //Post /api/users
         [HttpPost]
         public IActionResult Post(CreateUserInputModel model)

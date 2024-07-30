@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using DevFreela.API.Entities;
 using DevFreela.API.Models;
 using DevFreela.API.Persistence;
 using DevFreela.API.Services;
@@ -59,8 +60,8 @@ namespace DevFreela.API.Controllers
             _context.Projects.Add(project);
 
             _context.SaveChanges();
-            
-            return CreatedAtAction(nameof(GetById), new {project.Id}, model);
+
+            return CreatedAtAction(nameof(GetById), new { project.Id }, model);
         }
 
         // PUT api/projects/1234
@@ -71,14 +72,14 @@ namespace DevFreela.API.Controllers
 
             if (project is null)
             {
-                return NotFound(); 
+                return NotFound();
             }
-            
-            project.Update(model.Title, model.Description, model.TotalCost );
+
+            project.Update(model.Title, model.Description, model.TotalCost);
 
             _context.Projects.Update(project);
             _context.SaveChanges();
-            
+
             return NoContent();
         }
 
@@ -86,6 +87,16 @@ namespace DevFreela.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project is null)
+            {
+                return NotFound();
+            }
+    
+            project.SetAsDeleted();
+            _context.Projects.Update(project);
+            _context.SaveChanges();
             return NoContent();
         }
 
@@ -93,6 +104,17 @@ namespace DevFreela.API.Controllers
         [HttpPut(("{id}/start"))]
         public IActionResult Start(int id)
         {
+            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project is null)
+            {
+                return NotFound();
+            }
+            
+            project.Start();
+            _context.Projects.Update(project);
+            _context.SaveChanges();
+
             return NoContent();
         }
 
@@ -100,6 +122,15 @@ namespace DevFreela.API.Controllers
         [HttpPut("{id}/complete")]
         public IActionResult Complete(int id)
         {
+            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project is null)
+            {
+                return NotFound();
+            }
+            project.Complete();
+            _context.Projects.Update(project);
+            _context.SaveChanges();
             return NoContent();
         }
 
@@ -107,6 +138,19 @@ namespace DevFreela.API.Controllers
         [HttpPost("{id}/comments")]
         public IActionResult PostComment(int id, CreateProjectCommentInputModel model)
         {
+            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project is null)
+            {
+                return NotFound();
+            }
+
+            var comment = new ProjectComment(model.Content, model.IdProject, model.IdUser);
+            
+           
+            _context.ProjectComments.Add(comment);
+            _context.SaveChanges();
+
             return Ok();
         }
     }
