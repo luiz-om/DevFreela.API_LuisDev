@@ -17,11 +17,14 @@ builder.Services.Configure<FreeLanceTotalCostConfig>(
 // renova a configuracao e cria uma nova a cada requisicao
     builder.Services.AddSingleton<IConfigService, ConfigService>();
 
+//Acesso a dados
+   // builder.Services.AddDbContext<DevFreelaDbContext>(o => o.UseInMemoryDatabase("DevFreelaDB"));
+   var conectionString = builder.Configuration.GetConnectionString("DevFreelaDB");
 
-    builder.Services.AddDbContext<DevFreelaDbContext>(o => o.UseInMemoryDatabase("DevFreelaDB"));
+   builder.Services.AddDbContext<DevFreelaDbContext>(o => o.UseSqlServer(conectionString)); 
 //Gerenciar as exceçoes
-builder.Services.AddExceptionHandler<ApiExceptionHandler>();
-builder.Services.AddProblemDetails();
+//builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+ builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -40,10 +43,16 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 
 //fim
+
+
 app.UseHttpsRedirection();
+
+app.UseCors("*");
 
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+

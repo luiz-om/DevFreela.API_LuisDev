@@ -11,7 +11,7 @@ namespace DevFreela.API.Models
         public ProjectItemViewModel(int id, string title,
       string clientName, string freelancerName, decimal totalCost)
         {
-            this.Id = id;
+            Id = id;
             Title = title;
 
             ClientName = clientName;

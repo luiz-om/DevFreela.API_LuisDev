@@ -7,13 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.API.Persistence
 {
-    public class DevFreelaDbContext : DbContext
+    public class DevFreelaDbContext(DbContextOptions<DevFreelaDbContext> options) : DbContext(options)
     {
-        public DevFreelaDbContext(DbContextOptions<DevFreelaDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Skill> Skills { get; set; }
@@ -74,6 +69,11 @@ namespace DevFreela.API.Persistence
                     
                     
                 });
+                builder.Entity<Project>(entity =>
+            {
+                entity.Property(e => e.TotalCost)
+                    .HasColumnType("decimal(18, 2)");
+            });
 
             base.OnModelCreating(builder);
         }
